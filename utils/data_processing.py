@@ -31,7 +31,7 @@ def remove_duplicates_and_empty_rows(df: pd.DataFrame, df_name: str) -> pd.DataF
 def check_if_column_is_unique_per_row(df: pd.DataFrame, col_name: str) -> bool:
     number_of_rows_total = len(df)
     number_of_unique_values_in_col = df[
-        col_name].nunique() # Does not include NaN, therefore in case of empty values False will be returned
+        col_name].nunique()
 
     return number_of_rows_total == number_of_unique_values_in_col
 
