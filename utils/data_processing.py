@@ -1,5 +1,7 @@
 import pandas as pd
 from datetime import datetime
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import StandardScaler
 
 BRONZE_PATH = "./data/bronze/"
 SILVER_PATH = "./data/silver/"
@@ -34,6 +36,35 @@ def check_if_column_is_unique_per_row(df: pd.DataFrame, col_name: str) -> bool:
         col_name].nunique()
 
     return number_of_rows_total == number_of_unique_values_in_col
+
+
+def predict_missing_values_with_linear_regression(
+        mydf: pd.DataFrame,
+        col_A: str,
+        col_B: str,
+        predicted_flag_col_name: str
+):
+    pd.options.mode.chained_assignment = None
+    
+    df = mydf.copy()
+
+    scaler = StandardScaler()
+    df[col_A] = scaler.fit_transform(df[[col_A]])
+
+    train_df = df.dropna()
+    model = LinearRegression()
+    model.fit(train_df[[col_A]], train_df[col_B])
+
+    missing_values_mask = df[col_B].isna()
+    df.loc[missing_values_mask, col_B] = model.predict(df.loc[missing_values_mask, [col_A]])
+
+    df[predicted_flag_col_name] = False
+    df.loc[missing_values_mask, predicted_flag_col_name] = True
+
+    df[col_B] = df[col_B].astype(int)
+    df[col_A] = mydf[col_A]
+
+    return df
 
 
 def display_dataset_description(df: pd.DataFrame, df_name: str = ""):
