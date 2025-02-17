@@ -7,12 +7,21 @@ BRONZE_PATH = "./data/bronze/"
 SILVER_PATH = "./data/silver/"
 GOLD_PATH = "./data/gold/"
 
-GROUP_FILENAME = "group_data.csv"
-POSTS_FILENAME = "posts_data.csv"
+GROUP_FILENAME = "group_data"
+POSTS_FILENAME = "posts_data"
 
 
-def load_dataset(filepath: str, **kwargs) -> pd.DataFrame:
-    return pd.read_csv(filepath, **kwargs)
+def load_dataset(filepath: str, file_format: str = 'csv', **kwargs) -> pd.DataFrame:
+    if file_format == "csv":
+        return pd.read_csv(filepath + ".csv", **kwargs)
+    elif file_format == "parquet":
+        return pd.read_parquet(filepath + ".parquet", **kwargs)
+    else:
+        return None
+
+
+def save_dataset(df: pd.DataFrame, filepath: str, **kwargs):
+    df.to_parquet(filepath, **kwargs)
 
 
 def remove_duplicates_and_empty_rows(df: pd.DataFrame, df_name: str) -> pd.DataFrame:
