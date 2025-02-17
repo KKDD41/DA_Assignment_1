@@ -43,7 +43,7 @@ def predict_missing_values_with_linear_regression(
         col_A: str,
         col_B: str,
         predicted_flag_col_name: str
-):
+) -> pd.DataFrame:
     pd.options.mode.chained_assignment = None
     
     df = mydf.copy()
@@ -67,9 +67,33 @@ def predict_missing_values_with_linear_regression(
     return df
 
 
-def display_dataset_description(df: pd.DataFrame, df_name: str = ""):
-    print(f" -- DATASET {df_name} INFO --")
-    print(df.info())
+def get_outliers_IRQ(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
+    q1 = df[col_name].quantile(0.25)
+    q2 = df[col_name].quantile(0.75)
 
-    print(f" -- DATASET {df_name} DESCRIPTION --")
-    print(df.description().T)
+    IRQ = q2 - q1
+
+    outliers_df = df[
+        (df[col_name] < (q1 - 1.5 * IRQ)) | (df[col_name] > (q2 + 1.5 * IRQ))
+    ]
+
+    num_outliers = len(outliers_df)
+    print(f"Number of outliers in '{col_name}': {num_outliers}")
+    if num_outliers > 0:
+        print("Outliers statistics:")
+        print(outliers_df[col_name].describe())
+    else:
+        print(f"No outliers detected in {col_name}.")
+
+    return outliers_df
+
+
+def get_distinct_rows_from_dataframes(dfs: list[pd.DataFrame]) -> list[pd.DataFrame]:
+    combined_df = pd.concat(dfs, keys=range(len(dfs)))
+
+    duplicated = combined_df.duplicated(keep=False, subset=combined_df.columns)
+    distinct_combined_df = combined_df[~duplicated]
+
+    distinct_dfs = [group.droplevel(0) for _, group in distinct_combined_df.groupby(level=0)]
+
+    return distinct_dfs
