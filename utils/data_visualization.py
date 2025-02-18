@@ -2,9 +2,11 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
-def plot_barchart(df: pd.DataFrame, categorical_col_name: str):
+def plot_barchart(df: pd.DataFrame, categorical_col_name: str | list[str]):
     plt.figure(figsize=(10, 5))
     palette = sns.color_palette("viridis", n_colors=df[categorical_col_name].nunique())
 
@@ -182,4 +184,48 @@ def analyse_numerical_features_per_category(df: pd.DataFrame, cols_to_remove: li
         plt.show()
 
 
+def analyse_aggregated_features_per_category(
+        df: pd.DataFrame,
+        agg_cols: list[list[str]],
+        metrics: list[str],
+        agg_method: str = 'sum'
+):
+    grouped_dfs = []
+    for agg_col_list in agg_cols:
+        if agg_method == 'sum':
+            grouped_df = df[
+                metrics + agg_col_list
+            ].groupby(agg_col_list).sum()
+        elif agg_method == 'mean':
+            grouped_df = df[
+                metrics + agg_col_list
+            ].groupby(agg_col_list).mean()
 
+        grouped_dfs.append(grouped_df)
+
+    cols_num = len(agg_cols)
+    rows_num = len(metrics)
+
+    fig, axes = plt.subplots(nrows=rows_num, ncols=cols_num, figsize=(20, 45))
+    axes = axes.flatten()
+
+    for i in range(0, rows_num * cols_num, cols_num):
+        metric = metrics[i // cols_num] # reach
+
+        for j in range(cols_num):
+            x = agg_cols[j][0]
+            hue = agg_cols[j][min(1, len(agg_cols[j]) - 1)]
+
+            sns.barplot(
+                data=grouped_dfs[j].reset_index(),
+                hue=hue,
+                y=metric,
+                x=x,
+                ax=axes[i + j]
+            )
+            axes[i + j].set_title(f'{agg_method[0].upper() + agg_method[1:]} of [{metric.upper()}] by [{", ".join([x.upper() for x in agg_cols[j]])}]')
+            axes[i + j].set_xlabel(x)
+            axes[i + j].set_ylabel(f'{agg_method[0].upper() + agg_method[1:]} of ' + metric)
+
+    plt.tight_layout()
+    plt.show()
