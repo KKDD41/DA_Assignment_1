@@ -229,3 +229,69 @@ def analyse_aggregated_features_per_category(
 
     plt.tight_layout()
     plt.show()
+
+
+def plot_linechart(
+        df: pd.DataFrame,
+        x_col_name: str,
+        y_col_name: str,
+        grouping_col: str,
+        ax
+):
+    if grouping_col:
+        lineplot = sns.lineplot(
+            data=df,
+            x=x_col_name,
+            y=y_col_name,
+            hue=grouping_col,
+            style=grouping_col,
+            markers=True,
+            dashes=False,
+            ax=ax
+        )
+
+        plt.title(f'[{y_col_name.upper()}] over time by [{grouping_col.upper()}]', fontsize=16)
+        plt.xlabel(x_col_name, fontsize=14)
+        plt.ylabel(y_col_name, fontsize=14)
+        plt.xticks(rotation=45)
+        lineplot.legend(title=f'[{grouping_col.upper()}]')
+    else:
+        lineplot = sns.lineplot(
+            data=df,
+            x=x_col_name,
+            y=y_col_name,
+            markers=True,
+            dashes=False,
+            ax=ax
+        )
+
+        plt.title(f'[{y_col_name.upper()}] over time', fontsize=16)
+        plt.xlabel(x_col_name, fontsize=14)
+        plt.ylabel(y_col_name, fontsize=14)
+        plt.xticks(rotation=45)
+
+
+
+def analyse_features_trend(df: pd.DataFrame, x_col_name: str, grouping_col: str, in_one_row: bool = False):
+    numerical_cols = list(df.select_dtypes(include=['number']).columns)
+
+    if not in_one_row:
+        rows_num = len(numerical_cols)
+        cols_num = 2
+    else:
+        rows_num = len(numerical_cols) * 2
+        cols_num = 1
+
+    fig, axes = plt.subplots(nrows=rows_num, ncols=cols_num, figsize=(20, 45))
+    axes = axes.flatten()
+
+    for i in range(0, rows_num * cols_num, max(cols_num, 2)):
+        if not in_one_row:
+            plot_linechart(df, x_col_name, numerical_cols[i // cols_num], '', axes[i])
+            plot_linechart(df, x_col_name, numerical_cols[i // cols_num], grouping_col, axes[i + 1])
+        else:
+            plot_linechart(df, x_col_name, numerical_cols[i // 2 * cols_num], '', axes[i])
+            plot_linechart(df, x_col_name, numerical_cols[i // 2 * cols_num], grouping_col, axes[i + 1])
+
+    plt.tight_layout()
+    plt.show()
