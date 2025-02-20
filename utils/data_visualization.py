@@ -67,7 +67,7 @@ def plot_histogram_and_boxplot(df: pd.DataFrame, numerical_col_name: str):
     plt.show()
 
 
-def plot_correlation_matrices(df: pd.DataFrame, cols_to_remove: list[str],):
+def plot_correlation_matrices(df: pd.DataFrame, cols_to_remove: list[str]):
     sns.set(style="white", context='talk')
 
     numerical_cols = list(df.select_dtypes(include=['number']).columns)
@@ -79,7 +79,7 @@ def plot_correlation_matrices(df: pd.DataFrame, cols_to_remove: list[str],):
     pearson_corr = numerical_data.corr(method='pearson')
     spearman_corr = numerical_data.corr(method='spearman')
 
-    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(18, 8))
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(24, 14))
 
     sns.heatmap(pearson_corr, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'shrink': .8}, ax=axes[0],
                 linewidths=.5, linecolor='black')
