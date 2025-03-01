@@ -177,7 +177,115 @@ Other cases are the following:
 
 
 ## Feature Engineering and correlations investigation:
-- `Feature_Engineering_and_Reccomendations.ipynb`
+
+### New metrics creation
+
+#### New metrics definition:
+
+In this section additional metrics based on preprocessed _silver_ data will be defined and analysed. Enriched dataset and used aggregated tables would be saved to _gold_ layer as data ready for predictive analysis.
+
+Main purposes of new metrics are to mirrow and help to descide how to:
+- Increase the overall `reach` of publications.
+- Increase the overall `reactions` with publications.
+- Increate total `share` of publications.
+
+We will define the following additional metrics based on existing features:
+1. **Post day of week:** find out whether `reach` to posts is affected by day of week, as user activity obviously may vary depending on it.
+2. **Reach-to-Engagement Ratio:** measure of how "interesting" the post is and how actively users interact with it. It will help us to define categories, wich which users interacts the most as well as a general trend of user engagement.
+3. **Post Interest Rate:** categorical interpretation of the feature above, where $<10 \%$, $<50\%$, $\geq 50\%$ _Reach-to-Engagement Ratio_ will define _low_, _medium_, and _high_ post interest respectively. 
+4. **Qnique reaches:** if we count that each `share` of the post brought exactly one `reach`, this metric indicates how many users found this post by themselves. It could help us to define where it is necessary to produce more posts, and where to increase a number of users sharing this post.
+5. **Reaction Percent:** percentage of reactions from total amount of reactions and likes. It would support increasing overall `reactions` by converting `likes` into them.
+
+### Metrics analysis
+
+#### Metrics behavior within `post_day_of_week`:
+
+From analysis of features mean and sum per each day of week, we can conclude that 
+for `post_type = 'article'` metrics `reach`, `click`, `likes`, `unique_reach` are higher than for other days.
+
+No other significant differences were found within `post_day_of_week`.
+
+![](./screenshots/1060.png)
+![](./screenshots/1161.png)
+![](./screenshots/1314.png)
+
+#### Metrics behavior within `group_name`:
+
+As one can see from graphs below, `groupE` contains posts with lower activity and high `reach`, while `groupA` contains 
+relatively "interesting posts". Other metrics does not differ much within `post_day_of_week` or `post_type`.
+
+![](./screenshots/1492.png)
+
+#### Metrics behavior within `post_interest_rate`:
+
+Bar-charts with analysis of numerical features within `post_interest_rate`:
+
+![](./screenshots/1162.png)
+![](./screenshots/1587.png)
+![](./screenshots/1706.png)
+
+From the graphs above we can make the following conclusions:
+- `share` and `comment` metrics are visible only for posts with extremely high popularity (any comment produces a reply).
+- `unique_reach`, `reach`, `likes` metrics average for unpopular `post_type = 'article'` is relatively higher than for more popular posts. One can fairly suppose that articles are less resonant than popular posts of other types, however they "produce clicks" via click-beat titles and likes as a way of safe interesting material.
+- Difference between post interest and other metrics does not vary a lot through the days of the week.
+- `reaction` is high for medium posts. Popularity of `post_interest_rate = 'high'` are made through `comment` and `share`.
+- `reaction_per_likes` is higher for popular posts.
+
+#### Correlation matrices for new metrics:
+
+![](./screenshots/corr-for-new.png)
+
+The only conclusion which could be made is that `unique_reach` is highly correlated with `click` and `likes`,
+however it is caused by high correlation of `reach ~ likes` and `reach ~ click`.
+
+### Daily analysis
+
+#### New aggregated metrics creation:
+
+We will consider an average metric value for each date to analyse possible
+trends and for further time-series prediction.
+
+Moreover, following metrics will be created to support futher predictive analysis:
+1. **Reach Growth Rate:** tracking the growth rate of reach between posts can help identify what types of content or posting times might be contributing to increased visibility.
+2. **Reaction Growth Rate:** tracking how reaction rate is changing over time.
+3. **Share Growth Rate:** tracking how growth rate is chaing over time.
+
+#### Correlation matrices for new metrics:
+
+![](./screenshots/corr-for-aggregated.png)
+As it could be seen for aggregated statistics:
+- `unique_reach` is highly correlated with `click` and `likes`.
+- `reach_growth_rate` is sligtly affected with total average of `likes` and `click`.
+- On the other hand, share and growth rates does not correlate with any other metrics.
+- In total `reach`, `likes`, `click` averages are correlated with average `comments` number per date.
+
+#### Daily analysis for `post_type`:
+
+Daily behaviour of all numerical features:
+![](./screenshots/823.png)
+
+Growth rates analysis within `post_type`:
+![](./screenshots/146.png)
+
+From preformed analysis following conclusions could be made:
+- Average values of numerical metrics per `post_type` have no tendency to increase (according to the statistics given for 3 month).
+- For `post_type = 'article'` average sharing is constantly lower, than for other post types.
+- Reactions growth rate per day varies more significantly than other metrics, moreover in average users tend to react on promos and shorts rather than articles. 
+
+#### Daily analysis for `post_interest_rate`:
+
+Daily behaviour of all numerical features:
+![](./screenshots/285.png)
+
+Growth rates analysis within `post_interest_rate`:
+![](./screenshots/40.png)
+
+From preformed analysis following conclusions could be made:
+- Average values of numerical metrics per `post_interest_rate` have no tendency to increase (according to the statistics given for 3 month).
+- For `post_type = 'article'` average sharing is constantly lower, than for other post types.
+- Reactions growth rate per day varies more significantly than other metrics, moreover in average users tend to react on promos and shorts rather than articles. 
+
+## Recommendations to achieve higher `reach`, `likes` and `share`
 
 ## Predictive analysis:
 - `Reach_and_Likes_Prediction.ipynb`

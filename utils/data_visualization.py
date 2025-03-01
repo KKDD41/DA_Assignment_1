@@ -1,3 +1,4 @@
+import random
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -227,8 +228,12 @@ def analyse_aggregated_features_per_category(
             axes[i + j].set_xlabel(x)
             axes[i + j].set_ylabel(f'{agg_method[0].upper() + agg_method[1:]} of ' + metric)
 
+    plt.savefig(f"{random.randint(1000, 2000)}.png")
+
     plt.tight_layout()
     plt.show()
+
+
 
 
 def plot_linechart(
@@ -294,4 +299,6 @@ def analyse_features_trend(df: pd.DataFrame, x_col_name: str, grouping_col: str,
             plot_linechart(df, x_col_name, numerical_cols[i // 2 * cols_num], grouping_col, axes[i + 1])
 
     plt.tight_layout()
+
+    plt.savefig(f"{random.randint(1, 999)}.png")
     plt.show()
