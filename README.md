@@ -175,7 +175,6 @@ Other cases are the following:
 - **High `reach`, relatively small amount of `likes`, high `clicks`:** _keeping these rows in analysis, as they could indicate that posts were seen buy big amount of users, but collected negative reactions._
 - **High `reach`, small amount of `likes` and `clicks`:** _keeping these rows in analysis as posts, that were seen buy big amount of people, but did not force them to interact with this post._
 
-
 ## Feature Engineering and correlations investigation:
 
 ### New metrics creation
@@ -286,6 +285,42 @@ From preformed analysis following conclusions could be made:
 - Reactions growth rate per day varies more significantly than other metrics, moreover in average users tend to react on promos and shorts rather than articles. 
 
 ## Recommendations to achieve higher `reach`, `likes` and `share`
+
+### Recommendations list
+
+#### General recommendations:
+To increase target metrics next steps should be applied:
+1. Engage users to share and comment posts with low activity, as mainly because of these metrics posts convert to "highly interesting".
+2. Add note / mechanism to engage users to reach on articles more. Since there is no aim to increase `likes`, we can suggest mechanism of converting `likes` to reachtions.
+3. Add notes / mechanisms to engage people to read comments to the less popular posts and leave their own, since it is a great way to increase posts statistics whithout necessity to bring more unique viewers.
+4. In this case a general proposal will be to increase a number of articles published on Fridays, since users are more engaged to click and like this content on the day mentioned. For the sake of resource saving, proposition would be to reschedule publishing of articles from other days of week to Friday.
+
+#### Steps to preform:
+The following steps are proposed to be performed:
+1. Increase a number of articles published on Fridays, since users are more engaged to click and like this content on the day mentioned. For the sake of resource saving, proposition would be to reschedule 10% of articles published from each other days of week to Friday.
+2. To engage people to comment and produce a discussion under less popular posts and leave their own, we can add pre-generated comments for posts with low interest rate, but high reach.
+3. Add mechanism to engage users to react on posts (especially articles) rather than liking them.
+
+### Increasing number of articles on Fridays
+
+#### General statistics:
+In total average increase of all metric for `post_type = 'article'` on Fridays are:
+![](./screenshots/friday-increase.png)
+
+Thus, we are rescheduling 10% of posts from other week days to Friday, and assuming that its statistics 
+increases according defined above `percentage_differ_per_day_of_week_df`.
+
+#### Expected improvement:
+Total number of `reach`, `likes` and `click` for Friday articles will increase on ~15%.
+
+### Adding pre-generated comments to less popular posts
+
+#### General statistics:
+We will add pre-generated comments equals to 1% of `reach` to posts with low and medium rate of interest.
+
+#### Expected improvement:
+Pre-generated comments will bring comments increase for these posts up to ~5%, that will convert ~7% of 
+posts with low `post_interest_rate` to medium interest rate category.
 
 ## Predictive analysis:
 - `Reach_and_Likes_Prediction.ipynb`
