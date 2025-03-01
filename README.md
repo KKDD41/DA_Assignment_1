@@ -2,6 +2,48 @@
 
 ## Task Assignment
 
+### Data
+The provided CSV files contain approximately 20,000 rows with the following fields:
+- **Post Statistics**
+  - `post_id`: Unique post identifier.
+  - `post_date`: Date and time of publication.
+  - `post_type`: Type of post (article, short note, promo, etc.).
+  - `reach`: Post reach.
+  - `click`: Number of clicks.
+  - `likes`: Number of likes.
+  - `comments`: Number of comments.
+  - `share`: Number of shares.
+  - `reaction`: Total reaction score (e.g., "love", "haha", "angry", excluding likes).
+- **Posts by Groups**
+  - `group_name`: Name of the group or category the post belongs to.
+  - `post_id`: Unique post identifier.
+
+### Objectives
+1. **Data Cleaning**
+   - Identify and handle missing values and anomalies (e.g., negative reach, invalid dates).
+   - Justify the chosen methods for handling these issues.
+2. **Anomaly Detection**
+   - Detect and visualize outliers in key metrics (reach, likes, comments, etc.).
+   - Explain why these values are considered outliers and how to address them.
+3. **Metric Development**
+   - Create at least three additional metrics from the existing data.
+   - Explain the importance/relevance of these new metrics.
+   - Explore correlations between existing and new metrics using visual tools (correlation matrix, scatter plots).
+   - Interpret the results, highlighting strong or weak correlations.
+4. **Forecasting**
+   - Predict next month's clicks and reach using simple to advanced models (Moving Average, Linear Regression, ARIMA, Prophet).
+   - Explain the rationale behind the chosen forecasting method and evaluate its accuracy.
+5. **Insights and Recommendations**
+   - Identify at least two insights from the analysis.
+   - For each insight:
+     - Explain how it can help achieve key project goals (increase overall reach, user reactions per post, total shares).
+     - Provide actionable recommendations for the project team.
+     - Estimate potential changes in target metrics under different implementation scenarios (100%, 50%, 25%).
+     - Support each insight with visualizations and brief statistics.
+
+### Deliverables
+Provide graphical and textual responses to address the objectives outlined above.
+
 ## Exploratory data analysis and data cleaning
 
 ### General data preprocessing
