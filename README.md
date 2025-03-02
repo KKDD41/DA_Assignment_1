@@ -365,4 +365,73 @@ Pre-generated comments will bring comments increase for these posts up to ~5%, t
 posts with low `post_interest_rate` to medium interest rate category.
 
 ## Predictive analysis:
-- `Reach_and_Likes_Prediction.ipynb`
+
+### Prediction of `reach` and `likes` for the next month
+
+#### Data characteristics:
+
+According to the data and patterns investigation done:
+- Provided data has no seasonal trend or visible patterns vary by date.
+- In total `reach`, `likes`, `click` averages are correlated with average comments number per date.
+- unique_reach is highly correlated with `click` and `likes`.
+- `reach_growth_rate` is slightly affected with total average of `likes` and `click`.
+- There are correlations within daily average of main metrics according to Pearson and Spearman.
+- `reach` and `likes` features contains a lot of outliers and are not normally distributed in general.
+- Data is stationary.
+
+
+#### Models to be considered:
+
+Due to considerations above the following models were chosen to predict an 
+average `reach` and `likes` metrics for the next month:
+- ARIMA.
+- Sliding Average.
+
+### ARIMA Prediction
+
+#### Auto ARIMA parameters
+
+We will try to use ARIMA to predict average `reach` and `likes` per day based on existing aggregated data.
+
+Steps that would be preformed:
+- ADF test for stationary.
+- Applying `AUTO_ARIMA` for automatic parameters detection using AIC as test.
+- Drawing predicted forecast for upcoming month.
+
+![](./screenshots/reach-arima-auto.png)
+![](./screenshots/likes-arima-auto.png)
+
+`AUTO_ARIMA` straight line prediction indicates that the model has not identified any significant 
+autoregressive (AR), differencing (I), or moving average (MA) components in the data. It also may indicate 
+that the data was pre-processed with excessive differencing or transformations that overly stabilize the series, 
+the resultant series might become too random (akin to white noise).
+
+#### Manual ARIMA parameters
+
+### Sliding Average Prediction
+
+We will try to use Simple Sliding Average to predict average `reach` and `likes` per day based on existing aggregated data.
+
+Steps that would be preformed:
+- Trying big window size.
+- Trying lower window size.
+- Compare moving average forecasts to determine which window size is more appropriate for data.
+- Drawing predicted forecast for upcoming month.
+
+#### `reach` prediction
+
+![](./screenshots/reach-sw-big.png)
+![](./screenshots/reach-sw-small.png)
+
+As we can see, due to sharp decline in source data at the end of last month small window size
+produces lower predicted average value. Therefore, bigger interval should be used to capture all 
+trend and not to be affected by local anomalies.
+
+#### `likes` prediction
+
+![](./screenshots/likes-sw-big.png)
+![](./screenshots/likes-sw-small.png)
+
+Same conclusion of being bigger window more preferable could be made.
+
+

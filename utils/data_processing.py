@@ -62,7 +62,7 @@ def predict_missing_values_with_linear_regression(
         predicted_flag_col_name: str
 ) -> pd.DataFrame:
     pd.options.mode.chained_assignment = None
-    
+
     df = mydf.copy()
 
     scaler = StandardScaler()
@@ -92,7 +92,7 @@ def get_outliers_IRQ(df: pd.DataFrame, col_name: str) -> pd.DataFrame:
 
     outliers_df = df[
         (df[col_name] < (q1 - 1.5 * IRQ)) | (df[col_name] > (q2 + 1.5 * IRQ))
-    ]
+        ]
 
     num_outliers = len(outliers_df)
     print(f"Number of outliers in '{col_name}': {num_outliers}")
@@ -116,7 +116,11 @@ def get_distinct_rows_from_dataframes(dfs: list[pd.DataFrame]) -> list[pd.DataFr
     return distinct_dfs
 
 
-def predict_next_month_average_ARIMA(df, column_name, order=(1, 1, 1), information_criterion: str = 'aic'):
+def predict_next_month_average_ARIMA(df: pd.DataFrame,
+                                     column_name: str,
+                                     use_auto_arima: bool,
+                                     information_criterion: str = 'aic',
+                                     order=(0, 0, 0)):
     df = df.sort_values('post_date')
 
     time_series = df.groupby('post_date')[column_name].mean()
@@ -134,16 +138,19 @@ def predict_next_month_average_ARIMA(df, column_name, order=(1, 1, 1), informati
 
     time_series2 = time_series.copy()
 
-    arima_params = auto_arima(
-        y=time_series2,
-        trace=True,
-        stationary=True,
-        max_order=None,
-        maxiter=1000,
-        information_criterion=information_criterion
-    )
+    if use_auto_arima:
+        arima_params = auto_arima(
+            y=time_series2,
+            trace=True,
+            stationary=True,
+            max_order=None,
+            maxiter=1000,
+            information_criterion=information_criterion
+        )
 
-    arima_params = str(arima_params)
+        arima_params = str(arima_params)
+        print(arima_params[7: 12])
+        order = tuple(map(int, arima_params[7: 12].split(',')))
 
     model = ARIMA(time_series, order=order)
     model_fit = model.fit()
@@ -220,5 +227,7 @@ def predict_next_month_average_SW(df, column_name, window_size, forecast_days=30
     plt.legend()
     plt.grid(True)
     plt.show()
+
+    print(f"The final predicted moving average value for {column_name} is {last_average}")
 
     return combined_df
